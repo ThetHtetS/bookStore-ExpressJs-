@@ -1,7 +1,7 @@
 ## Bookstore Rest API using Express Js and Mongo DB
 
 In this porject, Token base authenticaton is used (josnwebtoken library),
-NoSql Database (Mongo DB) , and password hash usin bcript library
+NoSql Database (Mongo DB) , and password hash using bcript library
 and MVC design pattern is used.
 For checking auth, verifyusertoken and verifyadmintoken middleware are used.
 
