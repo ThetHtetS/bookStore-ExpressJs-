@@ -37,3 +37,17 @@ GET /orders/users/userId --get order by userId    <br>
 GET /orders/date -- get order between two date    <br>
 GET /orders/status -- get order by status     <br>
 
+
+## Review
+
+GET /review/bookId --get review by book id   <br>
+POST /review -- save review  <br>
+Delete /review  <br>
+
+
+## User 
+
+GET  /users --get all user
+POST /users -- register user
+POST /users/login -- login 
+GET  /users/length -- get number of total user 
