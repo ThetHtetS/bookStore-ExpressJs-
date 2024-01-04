@@ -42,12 +42,12 @@ GET /orders/status -- get order by status     <br>
 
 GET /review/bookId --get review by book id   <br>
 POST /review -- save review  <br>
-Delete /review  <br>
+DELETE /review  <br>
 
 
 ## User 
 
-GET  /users --get all user
-POST /users -- register user
-POST /users/login -- login 
-GET  /users/length -- get number of total user 
+GET  /users --get all user  <br>
+POST /users -- register user  <br>
+POST /users/login -- login   <br>
+GET  /users/length -- get number of total user  <br>
