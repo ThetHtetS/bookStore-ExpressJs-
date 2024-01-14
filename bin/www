@@ -1,49 +1,38 @@
-#!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const debug = require('debug')('bookstorebackend:server');
+const http = require('http');
+const app = require('../app');
+
 dotenv.config({ path: './config.env' });
-var app = require('../app');
-var debug = require('debug')('bookstorebackend:server');
-var http = require('http');
 
-/**
- * Get port from environment and store in Express.
- */
+const db = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
 
-
-var port = normalizePort(process.env.PORT || '8000');
-app.set('port', port);
-//console.log(app.get('env'));
-console.log(process.env);
-/**
- * Create HTTP server.
- */
-
-var server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+//connect mongo db
+mongoose
+  .connect(db, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log('MongoDB connected!');
+  })
+  .catch(err => console.log(err));
 
 /**
  * Normalize a port into a number, string, or false.
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+  const port = parseInt(val, 10);
 
   if (isNaN(port)) {
     // named pipe
     return val;
   }
-
   if (port >= 0) {
     // port number
     return port;
@@ -51,6 +40,19 @@ function normalizePort(val) {
 
   return false;
 }
+
+// Get port from environment and store in Express.
+
+const port = normalizePort(process.env.PORT || '8000');
+app.set('port', port);
+//console.log(app.get('env'));
+console.log(process.env);
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app);
 
 /**
  * Event listener for HTTP server "error" event.
@@ -61,9 +63,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  const bind = typeof port === 'string'? 'Pipe' + port: 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -80,14 +80,22 @@ function onError(error) {
   }
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
+// Event listener for HTTP server "listening" event.
 
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  ? 'pipe ' + addr
+  : 'port ' + addr.port;
   debug('Listening on ' + bind);
-}
+  }
+  
+
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
