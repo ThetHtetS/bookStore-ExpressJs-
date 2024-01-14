@@ -14,13 +14,16 @@ var categoriesRouter = require('./routes/categories');
 var booksRouter = require('./routes/books');
 var ordersRouter = require('./routes/orders');
 var reviewRouter = require('./routes/reviews');
+
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+if(process.env.NODE_ENV === 'development'){
+  app.use(logger('dev'));
+}
 
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -30,6 +33,7 @@ app.use(cors());
 mongoose.connect(db).then(() => console.log('MongoDB connected!'))
     .catch(err => console.log(err));
 
+    
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/categories', categoriesRouter);

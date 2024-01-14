@@ -3,7 +3,8 @@
 /**
  * Module dependencies.
  */
-
+const dotenv = require('dotenv');
+dotenv.config({ path: './config.env' });
 var app = require('../app');
 var debug = require('debug')('bookstorebackend:server');
 var http = require('http');
@@ -12,9 +13,11 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '4000');
-app.set('port', port);
 
+var port = normalizePort(process.env.PORT || '8000');
+app.set('port', port);
+//console.log(app.get('env'));
+console.log(process.env);
 /**
  * Create HTTP server.
  */
