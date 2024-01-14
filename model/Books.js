@@ -1,27 +1,26 @@
-
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
-const BookSchema = new Schema({
+const BookSchema = new Schema(
+  {
     title: {
-        type: String,
-        required: true,
+      type: String,
+      required: [true, 'book must have title']
     },
     price: {
-        type: String,
-        required: true,
-    }, 
+      type: String,
+      required: [true, 'price is necessary']
+    },
     category: {
-        type: Schema.Types.ObjectId,
-        ref: "Categories"
+      type: Schema.Types.ObjectId,
+      ref: 'Categories'
     },
     qty: {
-        type: Number,
-        required: true,
-    },
-},{ timestamps: true });
-// BookSchema.virtual('posts', {
-//     ref: 'Orders',
-//     localField: '_id',
-//     foreignField: 'orderItem'
-//   });
-module.exports = mongoose.model('Books',BookSchema);
+      type: Number,
+      required: [true, 'qty is necessary']
+    }
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model('Books', BookSchema);
