@@ -1,7 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var users = require('../controller/UsersController');
+const express = require('express');
 
+const users = require('../controller/UsersController');
+
+const router = express.Router();
 /* GET users listing. */
 
 // router.get('/', function(req, res, next) {
@@ -11,7 +12,7 @@ var users = require('../controller/UsersController');
 //router.get('/:userId', users.getUserById);
 router.post('/', users.registerUser);
 router.post('/login', users.login);
-router.get("/",users.getAllUser)
-router.get("/length",users.getTotelUser)
+router.get('/', users.getAllUser);
+router.get('/length', users.getTotelUser);
 
 module.exports = router;
