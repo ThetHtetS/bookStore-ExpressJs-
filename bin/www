@@ -46,7 +46,6 @@ function normalizePort(val) {
 const port = normalizePort(process.env.PORT || '8000');
 app.set('port', port);
 //console.log(app.get('env'));
-console.log(process.env);
 
 /**
  * Create HTTP server.
