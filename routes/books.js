@@ -4,10 +4,10 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/', auth.verifyUserToken, books.getAllBooks);
-router.post('/', auth.verifyUserToken, books.newBook);
-router.get('/:id', auth.verifyUserToken, books.getBookById);
-router.get('/title/:title', auth.verifyUserToken, books.findBookByTitle);
+router.get('/', books.getAllBooks);
+router.post('/', auth.verifyUserToken, books.createBook);
+router.get('/:id', books.getBook);
+router.get('/title/:title', books.findBookByTitle); //need to query
 router.put('/:id', auth.verifyAdminToken, books.updateBook);
 router.delete('/:id', auth.verifyAdminToken, books.deleteBook);
 

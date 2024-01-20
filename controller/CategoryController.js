@@ -1,68 +1,71 @@
 const CategoryService = require('../service/CategoryService');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-async function getAllCategories(req, res, next) {
-  let categories = await CategoryService.getAllCategories();
-  return res.json(categories);
-}
-
-const newCategory = async function(req, res, next) {
-  try {
-    const movie = await CategoryService.newCategory(req.body);
-    if (!movie) throw Error('Cannot save movie');
-    await res.status(201).json(movie);
-  } catch (err) {
-    await res.status(400).json({ message: err });
-  }
-};
-
-const getCategoryById = async function(req, res, next) {
-  let CategoryId = req.params['id'];
-  try {
-    let category = await CategoryService.getCategoryById(CategoryId);
-    if (!category) {
-      res.status(400).json({
-        error: 'Category not found'
-      });
-    } else {
-      res.json(todo);
+const getAllCategories = catchAsync(async (req, res) => {
+  const categories = await CategoryService.getAllCategories();
+  res.status(200).json({
+    status: 'success',
+    results: categories.length,
+    data: {
+      categories
     }
-  } catch (e) {
-    res.status(400).json({
-      error: 'ToDo not found'
-    });
-  }
-};
+  });
+});
 
-async function updateCategory(req, res, next) {
-  try {
-    let categoryId = req.params['id'];
-    console.log('Id ', categoryId, ' todo ', req.body);
-    const category = await CategoryService.updateCategory(categoryId, req.body);
-    if (!category) throw Error('Cannot update category');
-    await res.status(200).json(category);
-  } catch (err) {
-    console.log(err);
-    await res.status(400).json({ message: err });
-  }
-}
+const getCategory = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  const category = await CategoryService.getCategoryById(id);
+  if (!category)
+    if (!category) {
+      return next(new AppError('No category found with this ID', 404));
+    }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      category: [category]
+    }
+  });
+});
 
-async function deleteCategory(req, res, next) {
-  try {
-    let categoryId = req.params['id'];
-    console.log('Id ', categoryId, ' todo ', req.body);
-    const category = await CategoryService.deleteCategory(categoryId);
-    if (!category) throw Error('Cannot delete category');
-    await res.status(200).json(category);
-  } catch (err) {
-    console.log(err);
-    await res.status(400).json({ message: err });
+const createCategory = catchAsync(async (req, res, next) => {
+  const category = await CategoryService.newCategory(req.body);
+  if (!category) return next(new AppError('cannot save category', 400));
+  res.status(201).json();
+});
+
+const updateCategory = catchAsync(async (req, res, next) => {
+  const categoryId = req.params.id;
+  const category = await CategoryService.updateCategory(categoryId, req.body);
+  if (!category) {
+    return next(new AppError('No category found with that ID', 404));
   }
-}
+  res.status(200).json({
+    status: 'success',
+    data: {
+      category
+    }
+  });
+});
+
+const deleteCategory = catchAsync(async (req, res, next) => {
+  const categoryId = req.params.id;
+  const category = await CategoryService.deleteCategory(categoryId);
+  if (!category) {
+    return next(new AppError('No category found with that ID', 404));
+  }
+  await res.status(204).json({
+    status: 'success',
+    data: {
+      category
+    }
+  });
+});
 
 module.exports = {
   getAllCategories,
-  getCategoryById,
-  newCategory,
+  getCategory,
+  createCategory,
   updateCategory,
   deleteCategory
 };

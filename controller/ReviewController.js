@@ -1,80 +1,42 @@
-var reviewService = require('./../service/ReviewService');
+const reviewService = require('./../service/ReviewService');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-// const getAllReview = async (req,res,next)=>{
-//     try {
-//         const reviews = await reviewService.getAllReview();
-//         if(!reviews) throw Error('No reviews');
-//         await res.status(200).json(reviews);
+const getReviewByBookId = catchAsync(async (req, res, next) => {
+  const review = await reviewService.getReviewByBookId(req.params.bookId);
+  if (!review) return next(new AppError('No review found', 404));
+  res.status(200).json({
+    status: 'success',
+    results: review.length,
+    data: {
+      review
+    }
+  });
+});
 
-//     }catch(err)
-//     {
-//         await res.status(400).json({message: err})
-//     }
-// }
+const createReview = catchAsync(async (req, res) => {
+  const newReview = await reviewService.saveReview(req.body);
+  res.status(201).json({
+    status: 'success',
+    data: {
+      review: newReview
+    }
+  });
+});
 
-const getReviewById = async (req, res, next) => {
-  try {
-    let reviewId = req.params['reviewId'];
-    const review = await reviewService.getReviewById(reviewId);
-    if (!review) throw Error('No review');
-    await res.status(200).json(review);
-  } catch (err) {
-    await res.status(400).json({ message: err });
-  }
-};
-const getReviewByBookId = async (req, res, next) => {
-  try {
-    let id = req.params['bookId'];
-    const review = await reviewService.getReviewByBookId(id);
-    if (!review) throw Error('No review');
-    await res.status(200).json(review);
-  } catch (err) {
-    await res.status(400).json({ message: err });
-  }
-};
-const saveReview = async (req, res, next) => {
-  try {
-    const body = req.body;
-    console.log(body);
-    const review = await reviewService.saveReview(body);
-    if (!review) throw Error('review cannot be saved');
-    await res.status(201).json(review);
-  } catch (err) {
-    await res.status(400).json({ message: err });
-  }
-};
+const deleteReview = catchAsync(async (req, res, next) => {
+  const review = await reviewService.deleteReview(req.params.reviewId);
+  if (!review) return next(new AppError('No review found with that id', 404));
+  res.status(204).json({
+    status: 'success',
+    data: {
+      review
+    }
+  });
+});
 
-// const updateReview = async function (req,res,next)
-// {
-//     let reviewId = req.params['reviewId'];
-//     let review = req.body;
-//     console.log(`update review ${reviewId} `,req.body);
-//     try {
-//         const updateReview = await reviewService.updateReview(reviewId,review);
-//         console.log('Updated Review ',updateReview);
-//         if(!updateReview) throw Error('Cannot update Review');
-//         await res.status(200).json(updateReview);
-
-//     }catch(err)
-//     {
-//         await res.status(400).json({message: err})
-//     }
-// }
-const deleteReview = async (req, res, next) => {
-  let reviewId = req.params['reviewId'];
-  try {
-    const deleteReview = await reviewService.deleteReview(reviewId);
-    if (!deleteReview) throw Error('Cannot delete review');
-    await res.status(200).json(deleteReview);
-  } catch (err) {
-    await res.status(400).json({ message: err });
-  }
-};
 module.exports = {
-  //   getAllReview,
-  getReviewById,
   getReviewByBookId,
-  saveReview,
-  //  updateReview,
+  createReview,
   deleteReview
 };

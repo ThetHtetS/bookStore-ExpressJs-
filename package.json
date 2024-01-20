@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./bin/www",
-    "start:prod": "NODE_ENV=production nodemon ./bin/www"
+    "start:prod": "NODE_ENV=production nodemon ./bin/www",
+    "debug": "ndb ./bin/www"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -18,6 +19,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^8.0.3",
     "morgan": "~1.9.1",
+    "ndb": "^1.1.5",
     "validator": "^13.11.0"
   },
   "devDependencies": {

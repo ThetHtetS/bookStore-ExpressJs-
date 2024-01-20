@@ -1,126 +1,121 @@
 const OrderService = require('../service/OrderService');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-async function getAllOrders(req, res, next) {
-  let Orders = await OrderService.getAllOrders();
-  return res.json(Orders);
-}
-
-const newOrder = async function(req, res, next) {
-  try {
-    const Order = await OrderService.newOrder(req.body);
-    if (!Order) throw Error('Cannot save Order');
-    await res.status(201).json(Order);
-  } catch (err) {
-    await res.status(400).json({ message: err });
-  }
-};
-
-const getOrderById = async function(req, res, next) {
-  let OrderId = req.params['id'];
-  console.log(OrderId);
-  try {
-    let Order = await OrderService.getOrderById(OrderId);
-    if (!Order) {
-      res.status(400).json({
-        error: 'Order not found'
-      });
-    } else {
-      res.json([Order]);
+const getAllOrders = catchAsync(async (req, res, next) => {
+  const orders = await OrderService.getAllOrders();
+  res.status(200).json({
+    status: 'success',
+    results: orders.length,
+    data: {
+      orders
     }
-  } catch (e) {
-    res.status(400).json({
-      error: 'Order not found'
-    });
-  }
-};
+  });
+});
 
-const getOrderByUserId = async function(req, res, next) {
-  let OrderId = req.params['id'];
-  console.log(OrderId);
-  try {
-    let Order = await OrderService.getOrderByUid(OrderId);
-    if (!Order) {
-      res.status(400).json({
-        error: 'Order not found'
-      });
-    } else {
-      res.json(Order);
+const getOrder = catchAsync(async (req, res, next) => {
+  const orderId = req.params.id;
+  const order = await OrderService.getOrderById(orderId);
+  if (!order) {
+    return next(new AppError('No order found with that ID', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      order: [order]
     }
-  } catch (e) {
-    res.status(400).json({
-      error: 'Order not found'
-    });
-  }
-};
+  });
+});
 
-const getOrderByCreatedDate = async function(req, res, next) {
-  let start = req.body.start;
-  let end = req.body.end;
-  try {
-    let Order = await OrderService.getOrderByCreatedDate(start, end);
-    if (!Order) {
-      res.status(400).json({
-        error: 'Order not found tt'
-      });
-    } else {
-      res.json(Order);
+const getOrderByUserId = catchAsync(async (req, res, next) => {
+  const userId = req.params.id;
+  const order = await OrderService.getOrderByUid(userId);
+  if (!order) {
+    return next(new AppError('No order found with that user ID', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    results: order.length,
+    data: {
+      order
     }
-  } catch (e) {
-    res.status(400).json({
-      error: 'Order not found'
-    });
-  }
-};
+  });
+});
 
-const getOrderByStatus = async function(req, res, next) {
-  let status = req.body.status;
-  console.log('status', status);
-  try {
-    let Order = await OrderService.getOrderByStatus(status);
-    if (!Order) {
-      res.status(400).json({
-        error: 'Order not found tt'
-      });
-    } else {
-      res.json(Order);
+const getOrderByCreatedDate = catchAsync(async (req, res, next) => {
+  const start = req.body.start;
+  const end = req.body.end;
+  const order = await OrderService.getOrderByCreatedDate(start, end);
+  if (!order) {
+    return next(new AppError('No Order result', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    results: order.length,
+    data: {
+      order
     }
-  } catch (e) {
-    res.status(400).json({
-      error: 'Order not found'
-    });
+  });
+});
+
+const getOrderByStatus = catchAsync(async (req, res, next) => {
+  const status = req.body.status;
+  const order = await OrderService.getOrderByStatus(status);
+  if (!order) {
+    return next(new AppError('No order result', 404));
   }
-};
+  res.status(200).json({
+    status: 'success',
+    results: order.length,
+    data: {
+      order
+    }
+  });
+});
 
-async function updateOrder(req, res, next) {
-  try {
-    let Id = req.params['id'];
+const createOrder = catchAsync(async (req, res, next) => {
+  const newOrder = await OrderService.newOrder(req.body);
+  if (!newOrder) return next(new AppError('cannot save order', 400));
+  res.status(201).json({
+    status: 'success',
+    data: {
+      order: newOrder
+    }
+  });
+});
 
-    const Order = await OrderService.updateOrder(Id, req.body);
-    if (!Order) throw Error('Cannot update Order');
-    await res.status(200).json([Order]);
-  } catch (err) {
-    console.log(err);
-    await res.status(400).json({ message: err });
+const updateOrder = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  const order = await OrderService.updateOrder(id, req.body);
+  if (!order) {
+    return next(new AppError('No order found with that ID', 404));
   }
-}
+  res.status(200).json({
+    status: 'success',
+    data: {
+      order: order
+    }
+  });
+});
 
-async function deleteOrder(req, res, next) {
-  try {
-    let Id = req.params['id'];
-
-    const Order = await OrderService.deleteOrder(Id);
-    if (!Order) throw Error('Cannot delete Order');
-    await res.status(200).json(Order);
-  } catch (err) {
-    console.log(err);
-    await res.status(400).json({ message: err });
+const deleteOrder = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  const order = await OrderService.deleteOrder(id);
+  if (!order) {
+    return next(new AppError('No order found with that ID', 404));
   }
-}
+  res.status(204).json({
+    status: 'success',
+    data: {
+      order
+    }
+  });
+});
 
 module.exports = {
   getAllOrders,
-  getOrderById,
-  newOrder,
+  getOrder,
+  createOrder,
   updateOrder,
   deleteOrder,
   getOrderByUserId,

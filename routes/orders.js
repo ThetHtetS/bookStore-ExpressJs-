@@ -1,14 +1,15 @@
 const express = require('express');
-const orders = require('../controller/OrderController');
+const Order = require('../controller/OrderController');
 
 const router = express.Router();
 
-router.get('/', orders.getAllOrders);
-router.post('/', orders.newOrder);
-router.get('/:id', orders.getOrderById);
-router.get('/user/:id', orders.getOrderByUserId);
-router.post('/date', orders.getOrderByCreatedDate);
-router.post('/status', orders.getOrderByStatus);
-router.put('/:id', orders.updateOrder);
-router.delete('/:id', orders.deleteOrder);
+router.get('/', Order.getAllOrders);
+router.post('/', Order.createOrder);
+router.get('/:id', Order.getOrder);
+router.get('/user/:id', Order.getOrderByUserId); //should be put in user controller like user/:id/orders/:id
+router.post('/date', Order.getOrderByCreatedDate);
+router.post('/status', Order.getOrderByStatus);
+router.put('/:id', Order.updateOrder);
+router.delete('/:id', Order.deleteOrder);
+
 module.exports = router;
