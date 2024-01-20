@@ -4,9 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-
-//const { db } = require('./config/database');
-
+const errorHandler = require('./middleware/globalErrorHandler');
 const auth = require('./middleware/auth');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -46,16 +44,6 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  // res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.statusCode || 500);
-  res.json({ error: err.message, status: err.status });
-  //res.render('error');
-});
+app.use(errorHandler);
 
 module.exports = app;
