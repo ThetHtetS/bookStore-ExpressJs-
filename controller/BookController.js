@@ -51,7 +51,7 @@ const updateBook = catchAsync(async (req, res, next) => {
 const deleteBook = catchAsync(async (req, res, next) => {
   const Id = req.params.id;
   const book = await BookService.deleteBook(Id);
-  if (!book) return next(new AppError('No Book found with that ID', 404));
+  //if (!book) return next(new AppError('No Book found with that ID', 404));
   res.status(204).json({
     status: 'success',
     data: {
