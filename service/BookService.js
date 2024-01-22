@@ -1,28 +1,29 @@
 //const Book = require('../model/Book');
-const Books = require('../model/Books');
+
+let Books = require('../model/Books');
 
 const getAllBooks = async () => {
   return Books.find().populate('category');
 };
-
 const searchBookByTitle = async bookTitle => {
+  console.log(bookTitle);
   const books = await Books.find({
     title: {
       $regex: bookTitle,
       $options: 'i'
     }
   });
+  console.log(books);
   return books;
 };
-
 const getBookbyCategoryId = async CategoryId => {
   return Books.find({ movie: CategoryId }).populate('category');
 };
 
 const newBook = async Book => {
-  // const newBook = new Books(Book);
-  // let book = await newBook.save();
-  const book = await Books.create(Book);
+  const newBook = new Books(Book);
+  let book = await newBook.save(Book);
+  console.log(book);
   return book.populate('category');
 };
 
@@ -31,19 +32,17 @@ const getBookById = async BookId => {
 };
 
 async function updateBook(bookId, book) {
-  const updatedBook = await Books.findByIdAndUpdate(bookId, book, {
-    new: true,
-    runValidators: true
-  });
-  return updatedBook;
+  let updateBook = await Books.findByIdAndUpdate(bookId, book, { new: true });
+  return updateBook;
 }
 
 async function deleteBook(BookId) {
-  const deletedBook = await Books.findByIdAndDelete(BookId);
+  let deletedBook = await Books.findByIdAndDelete(BookId);
   return deletedBook;
 }
 const getTotalBook = async () => {
   const length = await Books.countDocuments();
+  console.log('length', length);
   return length;
 };
 module.exports = {
