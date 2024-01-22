@@ -5,7 +5,8 @@ const BookSchema = new Schema(
   {
     title: {
       type: String,
-      required: [true, 'book must have title']
+      required: [true, 'book must have title'],
+      unique: true
     },
     price: {
       type: String,
