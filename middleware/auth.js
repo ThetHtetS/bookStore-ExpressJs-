@@ -1,65 +1,65 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const AppError = require('./../utils/appError');
+const catchAsync = require('./../utils/catchAsync');
+const userService = require('../service/UserService');
+const User = require('./../model/User');
 
-const { config } = require('./../config/Config');
-
-const verifyUserToken = (req, res, next) => {
-  let token = req.headers.authorization;
-  //console.log('Token ',token);
-  if (!token)
-    return res.status(401).send('Access Denied / Unauthorized request');
-
-  try {
-    token = token.split(' ')[1]; // Remove Bearer from string
-
-    if (token === 'null' || !token)
-      return res.status(401).send('Unauthorized request');
-
-    try {
-      let verifiedUser = jwt.verify(token, config.TOKEN_SECRET.user);
-      if (!verifiedUser) return res.status(401).send('Unauthorized request');
-      req.user = verifiedUser; // user_id
-      next();
-    } catch {
-      // || jwt.verify(token, config.TOKEN_SECRET.admin); // add here or||  // config.TOKEN_SECRET => 'secretKey'
-      // if (!verifiedUser) return res.status(401).send('Unauthorized request')
-      let verifiedUser = jwt.verify(token, config.TOKEN_SECRET.admin);
-      if (!verifiedUser) return res.status(401).send('Unauthorized request');
-      req.user = verifiedUser; // user_id
-      next();
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(401).send('Invalid Token');
+const protect = catchAsync(async (req, res, next) => {
+  // 1) Getting token and check of it's there
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
   }
-};
-
-const verifyAdminToken = (req, res, next) => {
-  let token = req.headers.authorization;
-  //console.log('Token ',token);
-  if (!token)
-    return res.status(401).send('Access Denied / Unauthorized request');
-
-  try {
-    token = token.split(' ')[1]; // Remove Bearer from string
-
-    if (token === 'null' || !token)
-      return res.status(401).send('Unauthorized request');
-    try {
-      let verifiedUser = jwt.verify(token, config.TOKEN_SECRET.admin); // add here or||  // config.TOKEN_SECRET => 'secretKey'
-      if (!verifiedUser) return res.status(401).send('Unauthorized request');
-
-      req.user = verifiedUser; // user_id
-      next();
-    } catch {
-      res.status(201).json({ message: 'you are not admin' });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(401).send('Invalid Token');
+  if (!token) {
+    return next(
+      new AppError('You are not logged in! Please log in to get access.', 401)
+    );
   }
+
+  // 2) Verification token
+  const verifiedUser = jwt.verify(token, process.env.JWT_SECRET);
+
+  if (!verifiedUser) return next(new AppError('Invalid Token!', 401));
+
+  // 3) Check if user still exists
+  const currentUser = await userService.getUser(verifiedUser._id);
+  if (!currentUser) {
+    return next(
+      new AppError(
+        'The user belonging to this token does no longer exist.',
+        401
+      )
+    );
+  }
+  // 4) Check if user changed password after the token was issued
+  if (currentUser.changedPasswordAfter(verifiedUser.iat)) {
+    return next(
+      new AppError('User recently changed password! Please log in again.', 401)
+    );
+  }
+
+  // GRANT ACCESS TO PROTECTED ROUTE
+  req.user = currentUser; // user_id
+  next();
+});
+
+const restrictTo = (...roles) => {
+  return (req, res, next) => {
+    // roles ['admin', 'lead-guide']. role='user'
+
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+    }
+
+    next();
+  };
 };
 module.exports = {
-  verifyUserToken,
-  verifyAdminToken
+  protect,
+  restrictTo
 };

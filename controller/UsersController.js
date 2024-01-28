@@ -3,7 +3,6 @@ const userService = require('../service/UserService');
 const bookService = require('../service/BookService');
 const categoryService = require('../service/CategoryService');
 const orderService = require('../service/OrderService');
-const { config } = require('../config/Config');
 
 const registerUser = async function(req, res, next) {
   try {

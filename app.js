@@ -13,6 +13,7 @@ const categoriesRouter = require('./routes/categories');
 const booksRouter = require('./routes/books');
 const ordersRouter = require('./routes/orders');
 const reviewRouter = require('./routes/reviews');
+//const auth = require('./middleware/auth');
 
 dotenv.config({ path: './config.env' });
 
@@ -38,9 +39,14 @@ app.use('/api/v1/categories', categoriesRouter);
 app.use('/api/v1/books', booksRouter);
 app.use('/api/v1/orders', ordersRouter);
 app.use('/api/v1/reviews', reviewRouter);
-app.use('/api/v1/checking', auth.verifyAdminToken, (req, res, next) => {
-  res.status(200).json({ message: 'success' });
-});
+app.use(
+  '/api/v1/checking',
+  // auth.protect,
+  // auth.restrictTo('admin'),
+  (req, res, next) => {
+    res.status(200).json({ message: 'success' });
+  }
+);
 // catch 404 and forward to error handler
 
 app.use(function(req, res, next) {

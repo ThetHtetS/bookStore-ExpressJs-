@@ -1,5 +1,4 @@
 const express = require('express');
-//const { config } = require('../config/Config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const AppError = require('./../utils/appError');
@@ -24,11 +23,8 @@ const login = async email => {
   return await User.findOne(filter).select('+password'); // password is needed for verification
 };
 
-const getUserById = userId => {
-  return {
-    userId: userId,
-    name: 'Some data from DB'
-  };
+const getUser = async userId => {
+  return await User.findById(userId);
 };
 
 const getAllUser = async () => {
@@ -39,11 +35,10 @@ const getAllUser = async () => {
 
 const getTotalUser = async () => {
   const length = await User.countDocuments();
-  console.log('length', length);
   return length;
 };
 module.exports = {
-  getUserById,
+  getUser,
   register,
   login,
   getAllUser,
