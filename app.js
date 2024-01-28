@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const dotenv = require('dotenv');
 const errorHandler = require('./middleware/globalErrorHandler');
 const auth = require('./middleware/auth');
 const indexRouter = require('./routes/index');
@@ -12,6 +13,8 @@ const categoriesRouter = require('./routes/categories');
 const booksRouter = require('./routes/books');
 const ordersRouter = require('./routes/orders');
 const reviewRouter = require('./routes/reviews');
+
+dotenv.config({ path: './config.env' });
 
 const app = express();
 
@@ -29,16 +32,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/categories', categoriesRouter);
-app.use('/books', booksRouter);
-app.use('/orders', ordersRouter);
-app.use('/reviews', reviewRouter);
-app.use('/checking', auth.verifyAdminToken, (req, res, next) => {
+app.use('/api/v1/', indexRouter);
+app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/categories', categoriesRouter);
+app.use('/api/v1/books', booksRouter);
+app.use('/api/v1/orders', ordersRouter);
+app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/checking', auth.verifyAdminToken, (req, res, next) => {
   res.status(200).json({ message: 'success' });
 });
 // catch 404 and forward to error handler
+
 app.use(function(req, res, next) {
   next(createError(404));
 });

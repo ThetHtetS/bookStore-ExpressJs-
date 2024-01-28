@@ -19,6 +19,9 @@ const handleValidationErrorDB = err => {
   return new AppError(message, 400);
 };
 
+const handleNotFoundError = err => {
+  return new AppError('No route found', 400);
+};
 const sendErrorDev = (err, res) => {
   res.status(404).json({
     status: err.status,
@@ -33,8 +36,8 @@ const sendErrorProd = (err, res) => {
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
-      message: err.message,
-      err: err
+      message: err.message
+      // err: err
     });
 
     // Programming or other unknown error: don't leak error details
@@ -59,6 +62,7 @@ module.exports = (err, req, res, next) => {
     if (err.name === 'CastError') error = handleCastErrorDB(error);
     if (err.code === 11000) error = handleDuplicateFieldsDB(error);
     if (err.name === 'ValidationError') error = handleValidationErrorDB(error);
+    if (err.name === 'NotFoundError') error = handleNotFoundError(error);
     sendErrorProd(error, res);
   }
 

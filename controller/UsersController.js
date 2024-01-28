@@ -6,18 +6,16 @@ const orderService = require('../service/OrderService');
 const { config } = require('../config/Config');
 
 const registerUser = async function(req, res, next) {
-  const name = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
   try {
-    const user = await userService.register(name, email, password);
+    const user = await userService.register(req.body);
     const payload = { id: user._id };
     const token = jwt.sign(payload, config.TOKEN_SECRET.user);
     res
       .status(200)
       .json({ _id: user._id, username: user.username, token: token });
   } catch (err) {
-    res.status(400).send({ message: 'User already existed' });
+    // res.status(400).send({ message: 'User already existed' });
+    next(err);
   }
 };
 
