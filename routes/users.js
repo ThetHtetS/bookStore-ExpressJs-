@@ -13,6 +13,8 @@ const router = express.Router();
 //router.get('/:userId', users.getUserById);
 router.post('/', users.signUp);
 router.post('/login', users.login);
+router.post('/forgetPassword', users.forgetPassword);
+router.post('/resetPassword/:token', users.resetPassword);
 router.get('/', user.getAllUser);
 // router.get('/length', users.getTotelUser);
 

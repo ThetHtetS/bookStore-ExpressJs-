@@ -26,7 +26,9 @@ const login = async email => {
 const getUser = async userId => {
   return await User.findById(userId);
 };
-
+const getUserByEmail = async email => {
+  return await User.findOne({ email });
+};
 const getAllUser = async () => {
   const users = await User.find();
   //  console.log(users);
@@ -42,5 +44,6 @@ module.exports = {
   register,
   login,
   getAllUser,
-  getTotalUser
+  getTotalUser,
+  getUserByEmail
 };
