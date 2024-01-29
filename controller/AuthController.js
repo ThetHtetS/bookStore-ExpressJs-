@@ -7,6 +7,26 @@ const AppError = require('./../utils/appError');
 const sendEmail = require('./../utils/email');
 const User = require('./../model/User');
 
+const updatePassword = catchAsync(async (req, res, next) => {
+  // 1) Get user from collection
+  const user = await User.findById(req.user.id).select('+password');
+
+  // 2) Check if POSTed current password is correct
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError('Your current password is wrong.', 401));
+  }
+
+  // 3) If so, update password
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  // User.findByIdAndUpdate will NOT work as intended!
+
+  // 4) Log user in, send JWT
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+  res.status(200).json({ _id: user._id, name: user.name, token: token });
+});
+
 const signUp = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm } = req.body;
 
@@ -117,5 +137,6 @@ module.exports = {
   signUp,
   login,
   forgetPassword,
-  resetPassword
+  resetPassword,
+  updatePassword
 };
