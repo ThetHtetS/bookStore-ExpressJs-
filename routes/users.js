@@ -18,6 +18,7 @@ router.post('/forgetPassword', users.forgetPassword);
 router.post('/resetPassword/:token', users.resetPassword);
 router.patch('/updateMyPassword', auth.protect, users.updatePassword);
 router.patch('/updateMe', auth.protect, user.updateMe);
+router.delete('/deleteMe', auth.protect, user.deleteMe);
 router.get('/', user.getAllUser);
 // router.get('/length', users.getTotelUser);
 

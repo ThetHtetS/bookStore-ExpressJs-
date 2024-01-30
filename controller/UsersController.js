@@ -15,6 +15,15 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
+const deleteMe = async function(req, res, next) {
+  await userService.deleteMe(req.user._id);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Your account has been deleted successfully'
+  });
+};
+
 const updateMe = async function(req, res, next) {
   // 1) Create error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
@@ -45,6 +54,7 @@ const getUserById = async function(req, res, next) {
 
 const getAllUser = async (req, res, next) => {
   const users = await userService.getAllUser();
+  console.log(users);
   res.status(200).json(users);
 };
 
@@ -61,5 +71,6 @@ module.exports = {
   getUserById,
   getAllUser,
   updateMe,
-  getTotelUser
+  getTotelUser,
+  deleteMe
 };

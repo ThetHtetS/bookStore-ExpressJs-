@@ -15,6 +15,9 @@ const updateUserName = async (id, filteredBody) => {
   return user;
 };
 
+const deleteMe = async function(id) {
+  return await User.findByIdAndUpdate({ _id: id }, { active: false });
+};
 const register = async (name, email, password, passwordConfirm) => {
   // console.log(name, 'name', email, 'email', password, 'password');
   //const salt = await bcrypt.genSalt(10);
@@ -39,11 +42,8 @@ const getUser = async userId => {
 const getUserByEmail = async email => {
   return await User.findOne({ email });
 };
-const getAllUser = async (id, filteredBody) => {
-  const users = await User.findByIdAndDelete(id, filteredBody, {
-    new: true,
-    runValidators: true
-  });
+const getAllUser = async () => {
+  const users = await User.find();
   //  console.log(users);
   return users;
 };
@@ -59,5 +59,6 @@ module.exports = {
   getAllUser,
   getTotalUser,
   getUserByEmail,
-  updateUserName
+  updateUserName,
+  deleteMe
 };
