@@ -6,7 +6,6 @@ const getAllBooks = async () => {
   return Books.find().populate('category');
 };
 const searchBookByTitle = async bookTitle => {
-  console.log(bookTitle);
   const books = await Books.find({
     title: {
       $regex: bookTitle,

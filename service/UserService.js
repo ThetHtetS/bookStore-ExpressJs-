@@ -1,9 +1,19 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const AppError = require('./../utils/appError');
+
 const router = express.Router();
 const User = require('../model/User');
+const catchAsync = require('../utils/catchAsync');
+
+const updateUserName = async (id, filteredBody) => {
+  const user = await User.findByIdAndUpdate(id, filteredBody, {
+    new: true,
+    runValidators: true
+  });
+  console.log(user);
+  return user;
+};
 
 const register = async (name, email, password, passwordConfirm) => {
   // console.log(name, 'name', email, 'email', password, 'password');
@@ -29,8 +39,11 @@ const getUser = async userId => {
 const getUserByEmail = async email => {
   return await User.findOne({ email });
 };
-const getAllUser = async () => {
-  const users = await User.find();
+const getAllUser = async (id, filteredBody) => {
+  const users = await User.findByIdAndDelete(id, filteredBody, {
+    new: true,
+    runValidators: true
+  });
   //  console.log(users);
   return users;
 };
@@ -45,5 +58,6 @@ module.exports = {
   login,
   getAllUser,
   getTotalUser,
-  getUserByEmail
+  getUserByEmail,
+  updateUserName
 };

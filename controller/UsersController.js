@@ -1,48 +1,46 @@
 const jwt = require('jsonwebtoken');
-const userService = require('../service/UserService');
+const userService = require('./../service/UserService');
 const bookService = require('../service/BookService');
+const User = require('../model/User');
 const categoryService = require('../service/CategoryService');
 const orderService = require('../service/OrderService');
+const AppError = require('./../utils/appError');
+const catchAsync = require('../utils/catchAsync');
 
-const registerUser = async function(req, res, next) {
-  try {
-    const user = await userService.register(req.body);
-    const payload = { id: user._id };
-    const token = jwt.sign(payload, config.TOKEN_SECRET.user);
-    res
-      .status(200)
-      .json({ _id: user._id, username: user.username, token: token });
-  } catch (err) {
-    // res.status(400).send({ message: 'User already existed' });
-    next(err);
-  }
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach(el => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
 };
 
-const login = async function(req, res, next) {
-  const email = req.body.email;
-  const password = req.body.password;
-  try {
-    const user = await userService.login(email, password);
-    if (user.role === '0') {
-      const payload = { id: user._id };
-      const token = jwt.sign(payload, config.TOKEN_SECRET.user);
-      res
-        .status(200)
-        .json({ _id: user._id, username: user.username, token: token });
-    } else if (user.role === '1') {
-      const payload = { id: user._id };
-      const token = jwt.sign(payload, config.TOKEN_SECRET.admin);
-      res
-        .status(200)
-        .json({ _id: user._id, username: user.username, token: token });
-    }
-  } catch (err) {
-    res.status(401).send({ message: 'Invalid user' });
+const updateMe = async function(req, res, next) {
+  // 1) Create error if user POSTs password data
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(
+      new AppError(
+        'This route is not for password updates. Please use /updateMyPassword.',
+        400
+      )
+    );
   }
+
+  // 2) Filtered out unwanted fields names that are not allowed to be updated
+  const filteredBody = filterObj(req.body, 'name', 'email');
+  // 3) Update user document
+  const user = await userService.updateUserName(req.user._id, filteredBody);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user
+    }
+  });
 };
 const getUserById = async function(req, res, next) {
   const user = userService.getUserById(req.params.userId);
-  return res.status(200).json(user);
+  res.status(200).json(user);
 };
 
 const getAllUser = async (req, res, next) => {
@@ -61,8 +59,7 @@ const getTotelUser = async (req, res, next) => {
 };
 module.exports = {
   getUserById,
-  registerUser,
-  login,
   getAllUser,
+  updateMe,
   getTotelUser
 };
