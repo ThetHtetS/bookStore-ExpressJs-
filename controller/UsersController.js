@@ -54,7 +54,6 @@ const getUserById = async function(req, res, next) {
 
 const getAllUser = async (req, res, next) => {
   const users = await userService.getAllUser();
-  console.log(users);
   res.status(200).json(users);
 };
 

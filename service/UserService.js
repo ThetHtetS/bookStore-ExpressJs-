@@ -44,7 +44,6 @@ const getUserByEmail = async email => {
 };
 const getAllUser = async () => {
   const users = await User.find();
-  //  console.log(users);
   return users;
 };
 
