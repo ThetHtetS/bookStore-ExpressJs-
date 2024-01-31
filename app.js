@@ -7,6 +7,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const { xss } = require('express-xss-sanitizer');
 const errorHandler = require('./middleware/globalErrorHandler');
 const auth = require('./middleware/auth');
 const indexRouter = require('./routes/index');
@@ -44,8 +46,13 @@ app.set('view engine', 'jade');
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
-
 app.use(express.urlencoded({ extended: false }));
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss());
 app.use(cookieParser());
 
 // Serving static files
