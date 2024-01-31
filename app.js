@@ -13,11 +13,21 @@ const categoriesRouter = require('./routes/categories');
 const booksRouter = require('./routes/books');
 const ordersRouter = require('./routes/orders');
 const reviewRouter = require('./routes/reviews');
+const rateLimit = require('express-rate-limit');
+
 //const auth = require('./middleware/auth');
 
 dotenv.config({ path: './config.env' });
 
 const app = express();
+
+// Limit requests from same API
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour!'
+});
+app.use('/api', limiter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
