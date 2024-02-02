@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 const getAllBooks = catchAsync(async (req, res) => {
-  const books = await BookService.getAllBooks();
+  const books = await BookService.getAllBooks(req);
   res.status(200).json({
     status: 'success',
     results: books.length,

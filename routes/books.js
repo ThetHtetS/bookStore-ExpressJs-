@@ -3,8 +3,8 @@ const books = require('../controller/BookController');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
-
-router.get('/', auth.protect, books.getAllBooks);
+router.get('/', books.getAllBooks);
+//router.get('/', auth.protect, books.getAllBooks);
 router.get('/:id', books.getBook);
 router.get('/title/:title', books.findBookByTitle); //need to query
 router.post('/', auth.protect, auth.restrictTo('admin'), books.createBook);

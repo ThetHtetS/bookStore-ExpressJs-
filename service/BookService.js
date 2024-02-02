@@ -1,9 +1,15 @@
 //const Book = require('../model/Book');
+const Books = require('../model/Books');
+const APIFeatures = require('../utils/apiFeatures');
 
-let Books = require('../model/Books');
-
-const getAllBooks = async () => {
-  return Books.find().populate('category');
+const getAllBooks = async req => {
+  console.log(req.query);
+  const features = new APIFeatures(Books.find().populate('category'), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  return await features.query;
 };
 const searchBookByTitle = async bookTitle => {
   const books = await Books.find({
