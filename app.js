@@ -20,7 +20,7 @@ const reviewRouter = require('./routes/reviews');
 
 //const auth = require('./middleware/auth');
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: './.env' });
 
 const app = express();
 
@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Limit requests from same API
 const limiter = rateLimit({
-  max: 100,
+  max: 10000,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour!'
 });
