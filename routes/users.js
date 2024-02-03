@@ -11,7 +11,7 @@ const router = express.Router();
 //   res.send('respond with a resource');
 // });
 
-//router.get('/:userId', users.getUserById);
+router.get('/:userId/orders', user.getOrders);
 router.post('/', users.signUp);
 router.post('/login', users.login);
 router.post('/forgetPassword', users.forgetPassword);

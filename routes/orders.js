@@ -6,9 +6,7 @@ const router = express.Router();
 router.get('/', Order.getAllOrders);
 router.post('/', Order.createOrder);
 router.get('/:id', Order.getOrder);
-router.get('/user/:id', Order.getOrderByUserId); //should be put in user controller like user/:id/orders/:id
-router.post('/date', Order.getOrderByCreatedDate);
-router.post('/status', Order.getOrderByStatus);
+//router.get('/user/:id', Order.getOrderByUserId); //should be put in user controller like user/:id/orders/:id
 router.put('/:id', Order.updateOrder);
 router.delete('/:id', Order.deleteOrder);
 

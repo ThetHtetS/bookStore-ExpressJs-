@@ -56,6 +56,19 @@ const getAllUser = async (req, res, next) => {
   const users = await userService.getAllUser();
   res.status(200).json(users);
 };
+const getOrders = async (req, res, next) => {
+  const orders = await orderService.getOrderByUid(req.params.userId);
+  if (!orders) {
+    return next(new AppError('No order found with that user ID', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    results: orders.length,
+    data: {
+      orders
+    }
+  });
+};
 
 const getTotelUser = async (req, res, next) => {
   const user = await userService.getTotalUser();
@@ -71,5 +84,6 @@ module.exports = {
   getAllUser,
   updateMe,
   getTotelUser,
-  deleteMe
+  deleteMe,
+  getOrders
 };

@@ -26,7 +26,8 @@ const OrderSchema = new Schema(
       required: true
     },
     status: {
-      type: String
+      type: String,
+      default: 'Pending'
     },
     uid: { type: Schema.Types.ObjectId, ref: 'User' }
   },
