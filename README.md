@@ -35,6 +35,7 @@ PUT /orders/id --update order status <br>
 GET /users/userId/orders --get order by userId <br>
 GET /orders?createdAt[gte]=${date.start}&createdAt[lt]=${date.end} -- get order between two date <br>
 GET /orders?status=value -- get order by status (pending or finish) <br>
+GET /orders/monthly/year --get order monthly total
 
 ## Review
 

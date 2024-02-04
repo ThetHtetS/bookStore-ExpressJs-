@@ -32,7 +32,6 @@ const getOrder = catchAsync(async (req, res, next) => {
 const createOrder = catchAsync(async (req, res, next) => {
   // get order books array
   const orderItem = req.body.orderItem;
-  let stockEnough = true;
   // map for each book and reduce books' stock
   orderItem.forEach(async element => {
     const book = await BookService.getBookById(element.book);
@@ -79,10 +78,23 @@ const deleteOrder = catchAsync(async (req, res, next) => {
   });
 });
 
+const getMonthlyOrder = catchAsync(async (req, res, next) => {
+  const year = req.params.year * 1; // 2021
+
+  const monthlyOrder = await OrderService.getOrderMonthly(year);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      monthlyOrder
+    }
+  });
+});
+
 module.exports = {
   getAllOrders,
   getOrder,
   createOrder,
   updateOrder,
-  deleteOrder
+  deleteOrder,
+  getMonthlyOrder
 };

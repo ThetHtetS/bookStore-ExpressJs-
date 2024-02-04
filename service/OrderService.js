@@ -17,6 +17,39 @@ const getAllOrders = async req => {
   return await features.query;
 };
 
+const getOrderMonthly = async year => {
+  //const year = req.params.year;
+  const orders = await Orders.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: new Date(`${year}-01-01`),
+          $lte: new Date(`${year}-12-31`)
+        }
+      }
+    },
+    {
+      $group: {
+        _id: { $month: '$createdAt' },
+        numOrders: { $sum: 1 },
+        orders: { $push: '$name' }
+      }
+    },
+    {
+      $addFields: { month: '$_id' }
+    },
+    {
+      $project: {
+        _id: 0
+      }
+    },
+    {
+      $limit: 12
+    }
+  ]);
+  return orders;
+};
+
 const save = async Order => {
   const newOrder = new Orders(Order);
   const order = await newOrder.save();
@@ -61,5 +94,6 @@ module.exports = {
   getOrderById,
   updateOrder,
   getOrderByUid,
-  getTotalOrder
+  getTotalOrder,
+  getOrderMonthly
 };
