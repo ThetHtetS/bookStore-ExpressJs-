@@ -30,6 +30,16 @@ const getOrder = catchAsync(async (req, res, next) => {
 });
 
 const createOrder = catchAsync(async (req, res, next) => {
+  // get order books array
+  const orderItem = req.body.orderItem;
+  let stockEnough = true;
+  // map for each book and reduce books' stock
+  orderItem.forEach(async element => {
+    const book = await BookService.getBookById(element.book);
+    book.qty -= element.qty;
+    book.save({ validateBeforeSave: false });
+  });
+
   const newOrder = await OrderService.save(req.body);
   if (!newOrder) return next(new AppError('cannot save order', 400));
 
