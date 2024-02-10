@@ -24,6 +24,16 @@ dotenv.config({ path: './.env' });
 
 const app = express();
 
+// access-control
+app.use('/images/books', (req, res, next) => {
+  console.log('run this middleware');
+  res.set({
+    'Cross-Origin-Resource-Policy': 'cross-origin'
+  });
+
+  next();
+});
+
 // Set security HTTP headers
 app.use(helmet());
 
@@ -56,11 +66,24 @@ app.use(xss());
 app.use(cookieParser());
 
 // Serving static files
+app.use('/images', (req, res, next) => {
+  console.log('run this middleware');
+  res.set({
+    'Cross-Origin-Resource-Policy': 'cross-origin'
+  });
+  next();
+});
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static('public'));
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
+// access-control
 
-app.use('/api/v1/', indexRouter);
+//app.use('/', indexRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/categories', categoriesRouter);
 app.use('/api/v1/books', booksRouter);

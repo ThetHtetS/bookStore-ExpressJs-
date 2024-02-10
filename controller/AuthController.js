@@ -64,6 +64,7 @@ const login = catchAsync(async (req, res, next) => {
 
 const forgetPassword = async (req, res, next) => {
   // 1)) get user based on requested email
+  console.log(req.body.email);
   const user = await userService.getUserByEmail(req.body.email);
 
   if (!user) {
@@ -77,22 +78,25 @@ const forgetPassword = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // 3) Send it to user's email
-  const resetURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/users/resetPassword/${resetToken}`;
 
+  // const resetURL = `${req.protocol}://${req.get(
+  //   'host'
+  // )}/api/v1/users/resetPassword/${resetToken}`;
+
+  const resetURL = `http://localhost:3000/account/resetPassword/${resetToken}`;
   const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
 
   try {
     await sendEmail({
       email: user.email,
       subject: 'Your password reset token (valid for 10 min)',
-      message
+      message,
+      html: `Click <a href="${resetURL}" > here </a> to reset  your password`
     });
 
     res.status(200).json({
       status: 'success',
-      message: 'Token sent to email!'
+      message: `Password reset link was sent to: ${user.email}!`
     });
   } catch (err) {
     user.passwordResetToken = undefined;
@@ -100,7 +104,9 @@ const forgetPassword = async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     return next(
-      new AppError('There was an error sending the email. Try again later!'),
+      new AppError(
+        `There was an error sending the email. Try again later! /n ${err}`
+      ),
       500
     );
   }
@@ -131,7 +137,9 @@ const resetPassword = catchAsync(async (req, res, next) => {
   // 3) Update changedPasswordAt property for the user
   // 4) Log the user in, send JWT
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-  res.status(200).json({ _id: user._id, name: user.name, token: token });
+  res
+    .status(200)
+    .json({ status: 'success', _id: user._id, name: user.name, token: token });
 });
 module.exports = {
   signUp,

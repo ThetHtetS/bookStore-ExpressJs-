@@ -19,7 +19,8 @@ const BookSchema = new Schema(
     qty: {
       type: Number,
       required: [true, 'qty is necessary']
-    }
+    },
+    photo: { type: String }
   },
   { timestamps: true }
 );

@@ -20,6 +20,6 @@ router.patch('/updateMyPassword', auth.protect, users.updatePassword);
 router.patch('/updateMe', auth.protect, user.updateMe);
 router.delete('/deleteMe', auth.protect, user.deleteMe);
 router.get('/', user.getAllUser);
-// router.get('/length', users.getTotelUser);
+router.get('/length', user.getTotelUser);
 
 module.exports = router;

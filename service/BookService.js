@@ -24,6 +24,7 @@ const getBookbyCategoryId = async CategoryId => {
 };
 
 const newBook = async Book => {
+  console.log(Book, '////////');
   const newBook = new Books(Book);
   const book = await newBook.save();
 

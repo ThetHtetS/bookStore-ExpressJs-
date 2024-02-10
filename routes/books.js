@@ -7,7 +7,13 @@ router.get('/', books.getAllBooks);
 //router.get('/', auth.protect, books.getAllBooks);
 router.get('/:id', books.getBook);
 router.get('/title/:title', books.findBookByTitle); //need to query
-router.post('/', auth.protect, auth.restrictTo('admin'), books.createBook);
+router.post(
+  '/',
+  auth.protect,
+  auth.restrictTo('admin'),
+  books.uploadCoverPhoto,
+  books.createBook
+);
 router.put('/:id', auth.protect, auth.restrictTo('admin'), books.updateBook);
 router.delete('/:id', auth.protect, auth.restrictTo('admin'), books.deleteBook);
 
