@@ -8,9 +8,7 @@ const getReviews = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     results: review.length,
-    data: {
-      review
-    }
+    review
   });
 });
 
@@ -21,9 +19,7 @@ const createReview = catchAsync(async (req, res) => {
   const newReview = await reviewService.saveReview(req.body);
   res.status(201).json({
     status: 'success',
-    data: {
-      review: newReview
-    }
+    review: newReview
   });
 });
 
@@ -32,9 +28,7 @@ const deleteReview = catchAsync(async (req, res, next) => {
   if (!review) return next(new AppError('No review found with that id', 404));
   res.status(201).json({
     status: 'success',
-    data: {
-      review
-    }
+    review
   });
 });
 

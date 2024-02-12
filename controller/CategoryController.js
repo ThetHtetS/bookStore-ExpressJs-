@@ -7,9 +7,7 @@ const getAllCategories = catchAsync(async (req, res) => {
   res.status(200).json({
     status: 'success',
     results: categories.length,
-    data: {
-      categories
-    }
+    categories
   });
 });
 
@@ -22,16 +20,14 @@ const getCategory = catchAsync(async (req, res, next) => {
     }
   res.status(200).json({
     status: 'success',
-    data: {
-      category: [category]
-    }
+    category: [category]
   });
 });
 
 const createCategory = catchAsync(async (req, res, next) => {
   const category = await CategoryService.newCategory(req.body);
   if (!category) return next(new AppError('cannot save category', 400));
-  res.status(201).json();
+  res.status(201).json({ status: 'success', category });
 });
 
 const updateCategory = catchAsync(async (req, res, next) => {
@@ -42,9 +38,7 @@ const updateCategory = catchAsync(async (req, res, next) => {
   }
   res.status(200).json({
     status: 'success',
-    data: {
-      category
-    }
+    category
   });
 });
 
@@ -54,11 +48,10 @@ const deleteCategory = catchAsync(async (req, res, next) => {
   if (!category) {
     return next(new AppError('No category found with that ID', 404));
   }
-  await res.status(204).json({
+
+  await res.status(200).json({
     status: 'success',
-    data: {
-      category
-    }
+    category
   });
 });
 

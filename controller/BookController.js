@@ -2,6 +2,7 @@ const multer = require('multer');
 const BookService = require('../service/BookService');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+//const sendRes = require('./../utils/sendRes');
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -33,12 +34,11 @@ const getAllBooks = catchAsync(async (req, res) => {
   res.set({
     'Cross-Origin-Resource-Policy': 'cross-origin'
   });
+  //sendRes(200, books, res);
   res.status(200).json({
     status: 'success',
     results: books.length,
-    data: {
-      books
-    }
+    books
   });
 });
 
@@ -48,14 +48,11 @@ const getBook = catchAsync(async (req, res, next) => {
   if (!book) return next(new AppError('No Book found with that ID', 404));
   res.status(200).json({
     status: 'success',
-    data: {
-      book: [book]
-    }
+    book: [book]
   });
 });
 
 const createBook = catchAsync(async (req, res, next) => {
-  console.log(req.file.filename, '////////');
   const newBook = await BookService.newBook({
     ...req.body,
     photo: req.file.filename
@@ -63,22 +60,18 @@ const createBook = catchAsync(async (req, res, next) => {
   if (!newBook) return next(new AppError('cannot save book', 400));
   res.status(201).json({
     status: 'success',
-    data: {
-      book: newBook
-    }
+    book: newBook
   });
 });
 
 const updateBook = catchAsync(async (req, res, next) => {
-  console.log(req.body);
   const Id = req.params.id;
   const book = await BookService.updateBook(Id, req.body);
   if (!book) return next(new AppError('No Book found with that ID', 404));
+
   res.status(200).json({
     status: 'success',
-    data: {
-      book
-    }
+    book
   });
 });
 
@@ -88,9 +81,7 @@ const deleteBook = catchAsync(async (req, res, next) => {
   if (!book) return next(new AppError('No Book found with that ID', 404));
   res.status(201).json({
     status: 'success',
-    data: {
-      book
-    }
+    book
   });
 });
 
@@ -101,9 +92,7 @@ const findBookByTitle = catchAsync(async (req, res, next) => {
   res.json({
     status: 'success',
     results: books.length,
-    data: {
-      books
-    }
+    books
   });
 });
 

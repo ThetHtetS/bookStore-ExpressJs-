@@ -8,9 +8,7 @@ const getAllOrders = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     results: orders.length,
-    data: {
-      orders
-    }
+    orders
   });
 });
 
@@ -23,9 +21,7 @@ const getOrder = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      order: [order]
-    }
+    order: [order]
   });
 });
 
@@ -44,9 +40,7 @@ const createOrder = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success',
-    data: {
-      order: newOrder
-    }
+    order: newOrder
   });
 });
 
@@ -58,9 +52,7 @@ const updateOrder = catchAsync(async (req, res, next) => {
   }
   res.status(200).json({
     status: 'success',
-    data: {
-      order: [order]
-    }
+    order: [order]
   });
 });
 
@@ -72,9 +64,7 @@ const deleteOrder = catchAsync(async (req, res, next) => {
   }
   res.status(204).json({
     status: 'success',
-    data: {
-      order
-    }
+    order
   });
 });
 
@@ -84,9 +74,7 @@ const getMonthlyOrder = catchAsync(async (req, res, next) => {
   const monthlyOrder = await OrderService.getOrderMonthly(year);
   res.status(200).json({
     status: 'success',
-    data: {
-      monthlyOrder
-    }
+    monthlyOrder
   });
 });
 

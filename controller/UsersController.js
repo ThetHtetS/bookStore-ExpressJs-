@@ -42,9 +42,7 @@ const updateMe = async function(req, res, next) {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      user
-    }
+    user
   });
 };
 const getUserById = async function(req, res, next) {
@@ -56,6 +54,7 @@ const getAllUser = async (req, res, next) => {
   const users = await userService.getAllUser();
   res.status(200).json(users);
 };
+
 const getOrders = async (req, res, next) => {
   const orders = await orderService.getOrderByUid(req.params.userId);
   if (!orders) {
@@ -64,9 +63,7 @@ const getOrders = async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     results: orders.length,
-    data: {
-      orders
-    }
+    orders
   });
 };
 
