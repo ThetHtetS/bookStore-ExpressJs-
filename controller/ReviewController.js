@@ -27,7 +27,7 @@ const createReview = catchAsync(async (req, res) => {
 const deleteReview = catchAsync(async (req, res, next) => {
   const review = await reviewService.deleteReview(req.params.reviewId);
   if (!review) return next(new AppError('No review found with that id', 404));
-  res.status(204).json({
+  res.status(201).json({
     status: 'success',
     data: {
       review

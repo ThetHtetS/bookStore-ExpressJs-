@@ -26,7 +26,6 @@ const app = express();
 
 // access-control
 app.use('/images/books', (req, res, next) => {
-  console.log('run this middleware');
   res.set({
     'Cross-Origin-Resource-Policy': 'cross-origin'
   });
@@ -83,7 +82,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 // access-control
 
-//app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/categories', categoriesRouter);
 app.use('/api/v1/books', booksRouter);

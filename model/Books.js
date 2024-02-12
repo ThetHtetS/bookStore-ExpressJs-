@@ -8,6 +8,10 @@ const BookSchema = new Schema(
       required: [true, 'book must have title'],
       unique: true
     },
+    author: {
+      type: String,
+      required: [true, 'author field  is necessary']
+    },
     price: {
       type: String,
       required: [true, 'price is necessary']
