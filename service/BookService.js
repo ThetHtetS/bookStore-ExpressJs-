@@ -3,7 +3,7 @@ const Books = require('../model/Books');
 const APIFeatures = require('../utils/apiFeatures');
 
 const getAllBooks = async req => {
-  const features = new APIFeatures(Books.find().populate('category'), req.query)
+  const features = new APIFeatures(Books.find(), req.query)
     .filter()
     .sort()
     .limitFields()
@@ -19,12 +19,12 @@ const searchBookByTitle = async bookTitle => {
   });
   return books;
 };
+
 const getBookbyCategoryId = async CategoryId => {
-  return Books.find({ category: CategoryId }).populate('category');
+  return Books.find({ category: CategoryId });
 };
 
 const newBook = async Book => {
-  console.log(Book, '////////');
   const newBook = new Books(Book);
   const book = await newBook.save();
 
@@ -32,7 +32,7 @@ const newBook = async Book => {
 };
 
 const getBookById = async BookId => {
-  return Books.findById(BookId).populate('category');
+  return Books.findById(BookId);
 };
 
 async function updateBook(bookId, book) {
@@ -41,7 +41,7 @@ async function updateBook(bookId, book) {
 }
 
 async function deleteBook(BookId) {
-  deletedBook = await Books.findByIdAndDelete(BookId);
+  let deletedBook = await Books.findByIdAndDelete(BookId);
   return deletedBook;
 }
 const getTotalBook = async () => {

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-let Reviews = require('../model/Review');
+const Reviews = require('../model/Review');
 // let Movies = require('../model/Movie');
 
 // const getAllReview = async ()=>{
@@ -9,11 +9,15 @@ let Reviews = require('../model/Review');
 //     return Reviews.findById(reviewId).populate("movi");
 // }
 const getReviewByBookId = async bookId => {
-  return Reviews.find({ book: bookId }).populate('uid');
+  return Reviews.find({ book: bookId })
+    .select('-__v -book')
+    .populate({
+      path: 'uid',
+      select: '-__v -role -email'
+    });
 };
 
 const saveReview = async review => {
-  console.log(review);
   const newReview = new Reviews(
     review
     // uid: mongoose.Types.ObjectId(review.uid),
@@ -21,7 +25,7 @@ const saveReview = async review => {
     // rating: review.rating,
     // review: review.review,
   );
-  console.log(newReview);
+
   await newReview.save();
   //return newReview;
   return newReview.populate('uid');

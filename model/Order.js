@@ -16,15 +16,22 @@ const OrderSchema = new Schema(
       type: String,
       required: true
     },
-    orderItem: {
-      type: [
-        {
-          book: { type: Schema.Types.ObjectId, ref: 'Books' },
-          qty: { type: Number }
-        }
-      ],
-      required: true
-    },
+    // orderItem: {
+    //   type: [
+    //     {
+    //       book: { type: Schema.Types.ObjectId, ref: 'Books' },
+    //       qty: { type: Number }
+    //     }
+    //   ],
+    //   required: true
+    // },
+    orderItem: [
+      {
+        book: { type: Schema.Types.ObjectId, ref: 'Books' },
+        qty: { type: Number }
+        // required: true
+      }
+    ],
     status: {
       type: String,
       default: 'Pending'
@@ -33,4 +40,12 @@ const OrderSchema = new Schema(
   },
   { timestamps: true }
 );
+
+OrderSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'orderItem',
+    populate: { path: 'book', select: '-createdAt -updatedAt -__v' }
+  }).select('-createdAt -updatedAt -__v -uid');
+  next();
+});
 module.exports = mongoose.model('Orders', OrderSchema);

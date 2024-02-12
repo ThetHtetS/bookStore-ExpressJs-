@@ -2,13 +2,7 @@ const Orders = require('../model/Order');
 const APIFeatures = require('../utils/apiFeatures');
 
 const getAllOrders = async req => {
-  const features = new APIFeatures(
-    Orders.find().populate({
-      path: 'orderItem',
-      populate: { path: 'book' }
-    }),
-    req.query
-  )
+  const features = new APIFeatures(Orders.find(), req.query)
 
     .filter()
     .sort()
@@ -57,27 +51,18 @@ const save = async Order => {
 };
 
 const getOrderById = async OrderId => {
-  const order = Orders.findById(OrderId).populate({
-    path: 'orderItem',
-    populate: { path: 'book' }
-  });
+  const order = Orders.findById(OrderId);
   return order;
 };
 
 const getOrderByUid = async id => {
-  const order = Orders.find({ uid: id }).populate({
-    path: 'orderItem',
-    populate: { path: 'book' }
-  });
+  const order = Orders.find({ uid: id });
   return order;
 };
 
 async function updateOrder(id, order) {
   const updatedOrder = await Orders.findByIdAndUpdate(id, order, {
     new: true
-  }).populate({
-    path: 'orderItem',
-    populate: { path: 'book' }
   });
 
   return updatedOrder;

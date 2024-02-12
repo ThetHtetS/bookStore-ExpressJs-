@@ -29,4 +29,8 @@ const BookSchema = new Schema(
   { timestamps: true }
 );
 
+BookSchema.pre(/^find/, function(next) {
+  this.populate({ path: 'category', select: '-__v' });
+  next();
+});
 module.exports = mongoose.model('Books', BookSchema);

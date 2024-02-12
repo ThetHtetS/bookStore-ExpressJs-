@@ -1,4 +1,4 @@
-let Categories = require('../model/Category');
+const Categories = require('../model/Category');
 
 const getAllCategories = async () => {
   return Categories.find();
