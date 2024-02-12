@@ -29,7 +29,6 @@ async function deleteCategory(categoryId) {
 
 const getTotalCategory = async () => {
   const length = await Categories.countDocuments();
-  console.log('length', length);
   return length;
 };
 module.exports = {

@@ -27,7 +27,6 @@ const getBookbyCategoryId = async CategoryId => {
 const newBook = async Book => {
   const newBook = new Books(Book);
   const book = await newBook.save();
-
   return book.populate('category');
 };
 
@@ -36,7 +35,7 @@ const getBookById = async BookId => {
 };
 
 async function updateBook(bookId, book) {
-  const updateBook = await Books.findByIdAndUpdate(bookId, book, { new: true });
+  const updateBook = await Books.findByIdAndUpdate(bookId, book);
   return updateBook;
 }
 
@@ -46,7 +45,7 @@ async function deleteBook(BookId) {
 }
 const getTotalBook = async () => {
   const length = await Books.countDocuments();
-  console.log('length', length);
+
   return length;
 };
 module.exports = {

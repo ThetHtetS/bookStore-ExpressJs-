@@ -2,7 +2,7 @@ const reviewService = require('./../service/ReviewService');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-const getReviewByBookId = catchAsync(async (req, res, next) => {
+const getReviews = catchAsync(async (req, res, next) => {
   const review = await reviewService.getReviewByBookId(req.params.bookId);
   if (!review) return next(new AppError('No review found', 404));
   res.status(200).json({
@@ -15,6 +15,9 @@ const getReviewByBookId = catchAsync(async (req, res, next) => {
 });
 
 const createReview = catchAsync(async (req, res) => {
+  if (!req.body.book) req.body.book = req.params.bookId;
+  if (!req.body.uid) req.body.uid = req.user.id;
+
   const newReview = await reviewService.saveReview(req.body);
   res.status(201).json({
     status: 'success',
@@ -36,7 +39,7 @@ const deleteReview = catchAsync(async (req, res, next) => {
 });
 
 module.exports = {
-  getReviewByBookId,
+  getReviews,
   createReview,
   deleteReview
 };

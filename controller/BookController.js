@@ -70,6 +70,7 @@ const createBook = catchAsync(async (req, res, next) => {
 });
 
 const updateBook = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const Id = req.params.id;
   const book = await BookService.updateBook(Id, req.body);
   if (!book) return next(new AppError('No Book found with that ID', 404));
