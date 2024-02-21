@@ -7,5 +7,6 @@ const router = express.Router({ mergeParams: true });
 router.get('/', review.getReviews);
 router.post('/', review.createReview);
 router.delete('/:reviewId', review.deleteReview);
+router.patch('/:reviewId', review.updateReview);
 
 module.exports = router;

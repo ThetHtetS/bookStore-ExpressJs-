@@ -23,10 +23,23 @@ const createReview = catchAsync(async (req, res) => {
   });
 });
 
+const updateReview = catchAsync(async (req, res, next) => {
+  const id = req.params.reviewId;
+  const review = req.body;
+  const updatedReview = await reviewService.updateReview(id, review);
+  if (!updatedReview)
+    return next(new AppError('No review found with that id', 404));
+  res.status(200).json({
+    status: 'success',
+    review: updatedReview
+  });
+});
+
 const deleteReview = catchAsync(async (req, res, next) => {
   const review = await reviewService.deleteReview(req.params.reviewId);
+
   if (!review) return next(new AppError('No review found with that id', 404));
-  res.status(201).json({
+  res.status(200).json({
     status: 'success',
     review
   });
@@ -35,5 +48,6 @@ const deleteReview = catchAsync(async (req, res, next) => {
 module.exports = {
   getReviews,
   createReview,
+  updateReview,
   deleteReview
 };

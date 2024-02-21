@@ -10,6 +10,7 @@ const getAllBooks = async req => {
     .paginate();
   return await features.query;
 };
+
 const searchBookByTitle = async bookTitle => {
   const books = await Books.find({
     title: {
@@ -18,10 +19,6 @@ const searchBookByTitle = async bookTitle => {
     }
   });
   return books;
-};
-
-const getBookbyCategoryId = async CategoryId => {
-  return Books.find({ category: CategoryId });
 };
 
 const newBook = async Book => {

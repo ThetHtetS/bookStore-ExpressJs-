@@ -12,6 +12,8 @@ const BookSchema = new Schema(
       type: String,
       required: [true, 'author field  is necessary']
     },
+    ratingsAverage: { type: Number },
+    ratingsQuantity: { type: Number },
     price: {
       type: String,
       required: [true, 'price is necessary']

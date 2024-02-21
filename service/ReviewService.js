@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Reviews = require('../model/Review');
-// let Movies = require('../model/Movie');
 
 // const getAllReview = async ()=>{
 //     return Reviews.find();
@@ -8,6 +7,7 @@ const Reviews = require('../model/Review');
 // const getReviewById = async(reviewId)=>{
 //     return Reviews.findById(reviewId).populate("movi");
 // }
+
 const getReviewByBookId = async bookId => {
   return Reviews.find({ book: bookId })
     .select('-__v -book')
@@ -18,25 +18,22 @@ const getReviewByBookId = async bookId => {
 };
 
 const saveReview = async review => {
-  const newReview = new Reviews(
-    review
-    // uid: mongoose.Types.ObjectId(review.uid),
-    // book: mongoose.Types.ObjectId(review.book),
-    // rating: review.rating,
-    // review: review.review,
-  );
-
+  const newReview = new Reviews(review);
   await newReview.save();
-  //return newReview;
   return newReview.populate('uid');
 };
 
-// const updateReview = async(reviewId,review)=>{
-//     review.movie = mongoose.Types.ObjectId(review.movie);
-//     //console.log('Review Id ',reviewId, ' Review ',review);
-//     const updatedReview = await Reviews.findByIdAndUpdate(reviewId, review,{new: true});
-//     return updatedReview.populate("movie");
-// }
+const updateReview = async (reviewId, review) => {
+  const updatedReview = await Reviews.findByIdAndUpdate(reviewId, review, {
+    new: true
+  });
+  if (updatedReview) {
+    await Reviews.calcAverageRatings(updatedReview.book);
+  }
+  // console.log(Reviews.r, '/////review r');
+  return updatedReview.populate('uid');
+};
+
 const deleteReview = async reviewId => {
   const deletedReview = await Reviews.findByIdAndDelete(reviewId);
   return deletedReview;
@@ -46,6 +43,6 @@ module.exports = {
   // getReviewById,
   saveReview,
   getReviewByBookId,
-  // updateReview,
+  updateReview,
   deleteReview
 };
