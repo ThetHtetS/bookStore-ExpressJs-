@@ -35,4 +35,8 @@ BookSchema.pre(/^find/, function(next) {
   this.populate({ path: 'category', select: '-__v' });
   next();
 });
+
+// BookSchema.pre('save', function() {
+//   console.log('document will save');
+// });
 module.exports = mongoose.model('Books', BookSchema);

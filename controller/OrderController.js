@@ -2,6 +2,7 @@ const OrderService = require('../service/OrderService');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const BookService = require('../service/BookService');
+const { resolve } = require('styled-jsx/css');
 
 const getAllOrders = catchAsync(async (req, res, next) => {
   const orders = await OrderService.getAllOrders(req);
@@ -26,15 +27,6 @@ const getOrder = catchAsync(async (req, res, next) => {
 });
 
 const createOrder = catchAsync(async (req, res, next) => {
-  // get order books array
-  const orderItem = req.body.orderItem;
-  // map for each book and reduce books' stock
-  orderItem.forEach(async element => {
-    const book = await BookService.getBookById(element.book);
-    book.qty -= element.qty;
-    book.save({ validateBeforeSave: false });
-  });
-
   const newOrder = await OrderService.save(req.body);
   if (!newOrder) return next(new AppError('cannot save order', 400));
 

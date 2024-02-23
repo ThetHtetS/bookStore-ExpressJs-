@@ -45,8 +45,8 @@ const getOrderMonthly = async year => {
 };
 
 const save = async Order => {
-  const newOrder = new Orders(Order);
-  const order = await newOrder.save();
+  const order = await Orders.create(Order);
+
   return order;
 };
 

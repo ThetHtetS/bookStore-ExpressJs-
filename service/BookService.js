@@ -32,12 +32,12 @@ const getBookById = async BookId => {
 };
 
 async function updateBook(bookId, book) {
-  const updateBook = await Books.findByIdAndUpdate(bookId, book);
-  return updateBook;
+  const updatedBook = await Books.findByIdAndUpdate(bookId, book);
+  return updatedBook;
 }
 
 async function deleteBook(BookId) {
-  let deletedBook = await Books.findByIdAndDelete(BookId);
+  const deletedBook = await Books.findByIdAndDelete(BookId);
   return deletedBook;
 }
 const getTotalBook = async () => {

@@ -5,8 +5,8 @@ const getAllCategories = async () => {
 };
 
 const newCategory = async category => {
-  const newCategory = new Categories(category);
-  return newCategory.save();
+  const newCat = new Categories(category);
+  return newCat.save();
 };
 
 const getCategoryById = async CategoryId => {
@@ -14,16 +14,14 @@ const getCategoryById = async CategoryId => {
 };
 
 async function updateCategory(categoryId, category) {
-  let updateCategory = await Categories.findByIdAndUpdate(
-    categoryId,
-    category,
-    { new: true }
-  );
-  return updateCategory;
+  const updatedCat = await Categories.findByIdAndUpdate(categoryId, category, {
+    new: true
+  });
+  return updatedCat;
 }
 
 async function deleteCategory(categoryId) {
-  let deletedCategory = await Categories.findByIdAndDelete(categoryId);
+  const deletedCategory = await Categories.findByIdAndDelete(categoryId);
   return deletedCategory;
 }
 
