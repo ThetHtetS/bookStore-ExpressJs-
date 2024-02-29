@@ -66,7 +66,6 @@ app.use(cookieParser());
 
 // Serving static files
 app.use('/images', (req, res, next) => {
-  console.log('run this middleware');
   res.set({
     'Cross-Origin-Resource-Policy': 'cross-origin'
   });

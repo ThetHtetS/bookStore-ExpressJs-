@@ -2,7 +2,6 @@ const multer = require('multer');
 const BookService = require('../service/BookService');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-//const sendRes = require('./../utils/sendRes');
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -31,12 +30,10 @@ const uploadCoverPhoto = upload.single('photo');
 
 const getAllBooks = catchAsync(async (req, res) => {
   const books = await BookService.getAllBooks(req);
-  res.set({
-    'Cross-Origin-Resource-Policy': 'cross-origin'
-  });
-  //sendRes(200, books, res);
+  const total = await BookService.getTotalBook();
   res.status(200).json({
     status: 'success',
+    total,
     results: books.length,
     books
   });

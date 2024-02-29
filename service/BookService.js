@@ -42,7 +42,6 @@ async function deleteBook(BookId) {
 }
 const getTotalBook = async () => {
   const length = await Books.countDocuments();
-
   return length;
 };
 module.exports = {

@@ -12,17 +12,34 @@ const BookSchema = new Schema(
       type: String,
       required: [true, 'author field  is necessary']
     },
+    description: {
+      type: String
+    },
+    releaseYear: {
+      type: String
+    },
+    releaseTimes: { type: String },
     ratingsAverage: { type: Number },
     ratingsQuantity: { type: Number },
+    buyingPrice: { type: Number, required: true },
     price: {
-      type: String,
+      type: Number,
       required: [true, 'price is necessary']
+    },
+    discountPrice: {
+      type: Number,
+      validate: {
+        validator: function(el) {
+          return el < this.price;
+        },
+        message: 'Discount price must lower than original price!'
+      }
     },
     category: {
       type: Schema.Types.ObjectId,
       ref: 'Categories'
     },
-    qty: {
+    stock: {
       type: Number,
       required: [true, 'qty is necessary']
     },
