@@ -9,7 +9,12 @@ const multerStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = file.mimetype.split('/')[1];
-    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+    cb(
+      null,
+      `book-${req.body.title
+        .slice(0, 10)
+        .replace(' ', '')}-${Date.now()}.${ext}`
+    );
   }
 });
 
@@ -27,6 +32,13 @@ const upload = multer({
 });
 
 const uploadCoverPhoto = upload.single('photo');
+
+const topFiveBest = (req, res, next) => {
+  req.query.limit = 6;
+  req.query.sort = '-ratingsAverage';
+  req.query.fields = 'title,author,photo,price,discountPrice,ratingsAverage';
+  next();
+};
 
 const getAllBooks = catchAsync(async (req, res) => {
   const books = await BookService.getAllBooks(req);
@@ -100,5 +112,6 @@ module.exports = {
   updateBook,
   deleteBook,
   findBookByTitle,
-  uploadCoverPhoto
+  uploadCoverPhoto,
+  topFiveBest
 };

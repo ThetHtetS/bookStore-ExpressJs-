@@ -37,7 +37,7 @@ const signUp = catchAsync(async (req, res, next) => {
     passwordConfirm
   );
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-  res.status(200).json({ _id: user._id, name: user.name, token: token });
+  res.status(201).json({ _id: user._id, name: user.name, token: token });
 });
 
 const login = catchAsync(async (req, res, next) => {

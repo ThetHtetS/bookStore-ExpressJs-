@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const Schema = mongoose.Schema;
 const BookSchema = new Schema(
@@ -8,6 +9,7 @@ const BookSchema = new Schema(
       required: [true, 'book must have title'],
       unique: true
     },
+    slug: String,
     author: {
       type: String,
       required: [true, 'author field  is necessary']
@@ -48,12 +50,14 @@ const BookSchema = new Schema(
   { timestamps: true }
 );
 
-BookSchema.pre(/^find/, function(next) {
+BookSchema.pre('save', function(next) {
+  this.slug = slugify(this.title, { lower: true });
+  next();
+});
+
+BookSchema.pre(/^findOne/, function(next) {
   this.populate({ path: 'category', select: '-__v' });
   next();
 });
 
-// BookSchema.pre('save', function() {
-//   console.log('document will save');
-// });
 module.exports = mongoose.model('Books', BookSchema);

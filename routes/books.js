@@ -8,10 +8,12 @@ const router = express.Router();
 router.use(
   '/:bookId/reviews',
   auth.protect,
-  auth.restrictTo('admin'),
+  //auth.restrictTo('admin'),
   reviewRouter
 );
+
 router.get('/', books.getAllBooks);
+router.get('/topFive', books.topFiveBest, books.getAllBooks);
 //router.get('/', auth.protect, books.getAllBooks);
 router.get('/:id', books.getBook);
 router.get('/title/:title', books.findBookByTitle); //need to query

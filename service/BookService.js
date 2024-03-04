@@ -32,7 +32,9 @@ const getBookById = async BookId => {
 };
 
 async function updateBook(bookId, book) {
-  const updatedBook = await Books.findByIdAndUpdate(bookId, book);
+  const updatedBook = await Books.findByIdAndUpdate(bookId, book, {
+    new: true
+  });
   return updatedBook;
 }
 
